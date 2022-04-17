@@ -419,6 +419,7 @@ glmerPwrssUpdate <- function(pp, resp, tol, GQmat, compDev=TRUE, grpFac=NULL, ma
                      tol, as.integer(maxit),
                      GQmat, grpFac, verbose))
     }
+    # Kyou: everything belows is for using the R code to compute the deviance, which is really not true because the implementation is Laplace for whatever!!!
     oldpdev <- .Machine$double.xmax
     uOnly   <- nAGQ == 0L
     i <- 0
