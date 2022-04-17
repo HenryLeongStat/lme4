@@ -455,7 +455,16 @@ extern "C" {
         }
         pp->setU0(Vec::Zero(q)); // restore settings from pwrssUpdate;
         rp->updateMu(pp->linPred(1.));
-        return ::Rf_ScalarReal(devc0.sum() + pp->ldL2() - 2 * std::log(mult.prod()));
+
+	// Kyou: To avoid overflow/underflow!!!
+
+        double log_mult_prod=0;
+        for (int i=0; i<q; i++) {
+	    log_mult_prod += std::log(mult(i));
+	}
+
+        return ::Rf_ScalarReal(devc0.sum() + pp->ldL2() - 2 * log_mult_prod);
+        //return ::Rf_ScalarReal(devc0.sum() + pp->ldL2() - 2 * std::log(mult.prod()));
         END_RCPP;
     }
 
