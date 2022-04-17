@@ -806,6 +806,8 @@ optimizeGlmer <- function(devfun,
         rho$control <- attr(opt,"control")
         rho$nAGQ <- nAGQ
     } else {  ## stage == 2
+	# Kyou: Originally, the betas are set as offset in the PIRLS step
+	# Kyou: 
         rho$resp$setOffset(rho$baseOffset)
     }
     if (restart_edge) ## FIXME: implement this ...

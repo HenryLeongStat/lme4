@@ -307,6 +307,7 @@ extern "C" {
     // FIXME: sufficient to print just before/after update?
     static void pwrssUpdate(glmResp *rp, merPredD *pp, bool uOnly,
                             double tol, int maxit, int verbose) {
+        //Rcpp::Rcout << "\nKyou: in pwrssUpdate() from external.cpp! uOnly is: " << uOnly << std::endl;
         double oldpdev=std::numeric_limits<double>::max();
         double pdev;
         int maxstephalfit = 20;
@@ -383,7 +384,11 @@ extern "C" {
             Rcpp::Rcout << "\nglmerLaplace resDev:  " << rp->resDev() << std::endl;
             Rcpp::Rcout << "\ndelb 1:  " << pp->delb() << std::endl;
         }
-        pwrssUpdate(rp, pp, ::Rf_asInteger(nAGQ_), ::Rf_asReal(tol_), 
+        // Kyou: the third argument is uOnly. Here, it means whenever nAGQ!=0, uOnly=TRUE
+        // Kyou: change it as false for all case!
+        // Here is for Laplace... Should change it for AGQ!!
+        // pwrssUpdate(rp, pp, ::Rf_asInteger(nAGQ_), ::Rf_asReal(tol_), 
+        pwrssUpdate(rp, pp, false, ::Rf_asReal(tol_),  
                     ::Rf_asInteger(maxit_), ::Rf_asInteger(verbose_));
         return ::Rf_ScalarReal(rp->Laplace(pp->ldL2(), pp->ldRX2(), pp->sqrL(1.)));
         END_RCPP;
@@ -425,8 +430,13 @@ extern "C" {
         if (fac.size() != rp->mu().size())
             throw std::invalid_argument("size of fac must match dimension of response vector");
 
-        pwrssUpdate(rp, pp, true, tol, maxit, verb); // should be a
+        // Kyou: the third argument is uOnly. Here, it means whenever nAGQ!=0, uOnly=TRUE
+        // Kyou: change it as false for all case!
+        //pwrssUpdate(rp, pp, true, tol, maxit, verb); // should be a
                                                      // no-op
+        pwrssUpdate(rp, pp, false, tol, maxit, verb);
+        // Kyou: But it is not enough! fixed effects are still being optimized in the non-linear optimizer!
+        // Kyou: Need to remove the fixed effects in the non-linear optimizer too!
 
                     // devc0: vector with one element per grouping
                     // factor level containing the the squared

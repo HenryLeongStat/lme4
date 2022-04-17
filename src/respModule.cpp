@@ -69,6 +69,7 @@ namespace lme4 {
         if (oo.size() != d_offset.size())
             throw invalid_argument("setOffset: Size mismatch");
         d_offset = oo;          // this copies the values
+	Rcpp::Rcout << "\nKyou: in respModule.cpp! Inside lmResp::setOffset(), d_offset is: " << d_offset << std::endl;
     }
 
     void lmResp::setResp(const VectorXd& yy) {
