@@ -763,6 +763,7 @@ mkGlmerDevfun <- function(fr, X, reTrms, family, nAGQ = 1L, verbose = 0L,
         rho$verbose <- as.integer(verbose)
 
         ## initialize (from mustart)
+	# Kyou: Why do a Laplace step here???
         .Call(glmerLaplace, rho$pp$ptr(), rho$resp$ptr(), nAGQinit,
               control$tolPwrss, maxit, verbose)
         rho$lp0         <- rho$pp$linPred(1) # each pwrss opt begins at this eta
@@ -789,6 +790,7 @@ optimizeGlmer <- function(devfun,
                           stage = 1,
                           start = NULL,
                           ...) {
+    cat("Kyou: in optimizeGlmer!")
     ## FIXME: do we need nAGQ here?? or can we clean up?
     verbose <- as.integer(verbose)
     rho <- environment(devfun)
@@ -796,7 +798,11 @@ optimizeGlmer <- function(devfun,
         start <- getStart(start, rho$pp, "theta")
         adj <- FALSE
     } else { ## stage == 2
-        start <- getStart(start, rho$pp, "all")
+	# Kyou: getStart should only be theta, following the stage 1
+        #start <- getStart(start, rho$pp, "all")
+	start <- getStart(start, rho$pp, "theta")
+	# Kyou: What is adj really??!?
+	# Kyou: in lmer.R, lines 2600+, if adj is TRUE, then the control variables such as rhobeg, thetaStep are not set (can try and see the difference)
         adj <- TRUE
     }
     opt <- optwrap(optimizer, devfun, start, rho$lower,
@@ -808,6 +814,11 @@ optimizeGlmer <- function(devfun,
     } else {  ## stage == 2
 	# Kyou: Originally, the betas are set as offset in the PIRLS step
 	# Kyou: 
+	# Kyou: See the difference between rho$control vs opt:control
+	cat("Kyou: rho$control is:\n")
+	print(rho$control)
+	cat("Kyou: attropt,control is:\n")
+	print(attr(opt,"control"))
         rho$resp$setOffset(rho$baseOffset)
     }
     if (restart_edge) ## FIXME: implement this ...

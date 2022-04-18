@@ -382,7 +382,8 @@ extern "C" {
 
         if ( ::Rf_asInteger(verbose_) >100) {
             Rcpp::Rcout << "\nglmerLaplace resDev:  " << rp->resDev() << std::endl;
-            Rcpp::Rcout << "\ndelb 1:  " << pp->delb() << std::endl;
+            // Kyou: why this function is run even I set init=FALSE and nAGQ>1!?!?!!?
+            Rcpp::Rcout << "\nKyou: in external.cpp! glmerLaplace()! delb 1:  " << pp->delb().adjoint() << std::endl;
         }
         // Kyou: the third argument is uOnly. Here, it means whenever nAGQ!=0, uOnly=TRUE
         // Kyou: change it as false for all case!
@@ -470,8 +471,8 @@ extern "C" {
 
         double log_mult_prod=0;
         for (int i=0; i<q; i++) {
-	    log_mult_prod += std::log(mult(i));
-	}
+	        log_mult_prod += std::log(mult(i));
+	    }
 
         return ::Rf_ScalarReal(devc0.sum() + pp->ldL2() - 2 * log_mult_prod);
         //return ::Rf_ScalarReal(devc0.sum() + pp->ldL2() - 2 * std::log(mult.prod()));

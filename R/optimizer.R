@@ -15,6 +15,9 @@ Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
       control[["iprint"]] <- switch(as.character(min(as.numeric(verbose),3L)),
                                     "0"=0, "1"=20,"2"=10,"3"=1)
     }
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! xst is: ", xst, "\n")
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! n is: ", n, "\n")
+
     stopifnot(is.function(fn),
               length(formals(fn)) == 1L,
               (n <- length(par <- as.numeric(par))) == length(lower <- as.numeric(lower)),

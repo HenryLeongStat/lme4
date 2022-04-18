@@ -320,13 +320,22 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
                 p
             }
         else  ## nAGQ > 0
-            function(pars) {
+	    # Kyou: for nAGQ>0, pars are all fixed-effects + theta
+	    # Kyou: use theta only, which follows nAGQ==0
+            #function(pars) {
+	    function(theta) {
+		cat("Kyou: in lmer.R! Inside function for nAGQ>0 and not setting fixed-effects as offset")
                 ## pp$setDelu(rep(0, length(pp$delu)))
                 resp$setOffset(baseOffset)
                 resp$updateMu(lp0)
-                pp$setTheta(as.double(pars[dpars])) # theta is first part of pars
-                spars <- as.numeric(pars[-dpars])
-                offset <- if (length(spars)==0) baseOffset else baseOffset + pp$X %*% spars
+                #pp$setTheta(as.double(pars[dpars])) # theta is first part of pars
+		# Kyou: follows nAGQ==0
+		pp$setTheta(theta)
+		# Kyou: spars is useless when using theta only
+                #spars <- as.numeric(pars[-dpars])
+		# Kyou: Don't put fixed-effects as offset!!!!
+                #offset <- if (length(spars)==0) baseOffset else baseOffset + pp$X %*% spars
+		offset <- baseOffset
                 resp$setOffset(offset)
                 p <- pwrssUpdate(pp, resp, tol=tolPwrss, GQmat=GQmat,
                                  compDev=compDev, grpFac=fac, maxit=maxit, verbose=verbose)
@@ -1492,6 +1501,7 @@ refitML.merMod <- function (x, optimizer="bobyqa", ...) {
                   Lind=xpp$Lind, theta=xpp$theta, n=nrow(xpp$X))
     devfun <- mkdevfun(rho, 0L) # FIXME? also pass {verbose, maxit, control}
     opt <- ## "smart" calc.derivs rules
+	# Kyou: why bobyqa requires derivative???
         if(optimizer == "bobyqa" && !any("calc.derivs" == ...names()))
             optwrap(optimizer, devfun, x@theta, lower=x@lower, calc.derivs=TRUE, ...)
         else
@@ -2595,6 +2605,10 @@ getOptfun <- function(optimizer) {
     optfun
 }
 
+# Kyou: what is adj for?
+# Kyou: for the bollowing here (2600+ lines at lmer.R. if adj, then the control variables such as rhobeg, thetaStep are not set (can try and see the difference))
+# Kyou: fn is the devfun
+# Kyou: tried and proved that optwrap is used in glmer
 optwrap <- function(optimizer, fn, par, lower = -Inf, upper = Inf,
                     control = list(), adj = FALSE, calc.derivs = TRUE,
                     use.last.params = FALSE,
