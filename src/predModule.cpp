@@ -300,7 +300,7 @@ namespace lme4 {
         d_Vtr           = d_V.adjoint() * wtres;
         d_Utr           = d_LamtUt * wtres;
     }
-
+    // Kyou: is this step for setting the beta at each step?
     void merPredD::installPars(const Scalar& f) {
         d_u0 = u(f);
         d_beta0 = beta(f);

@@ -318,8 +318,8 @@ extern "C" {
         for (int i = 0; i < maxit; i++) {
             if (verb) {
                 Rcpp::Rcout << "*** pwrssUpdate step " << i << std::endl;
-                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu is: " << pp->delu().adjoint() << std::endl;
-                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb is: " << pp->delb().adjoint() << std::endl;
+                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu before update is: " << pp->delu().adjoint() << std::endl;
+                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb before update is: " << pp->delb().adjoint() << std::endl;
                 if (debug) {
                     Rcpp::Rcout << "\nmin delu at iteration " << i << ": " << pp->delu().minCoeff() << std::endl;
                     Rcpp::Rcout << "\nmax delu at iteration " << i << ": " << pp->delu().maxCoeff() << std::endl;
@@ -331,6 +331,10 @@ extern "C" {
             }
             Vec   olddelu(pp->delu()), olddelb(pp->delb());
             pdev = internal_glmerWrkIter(pp, rp, uOnly);
+
+            Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu after update (internal_glmerWrkIter()) is: " << pp->delu().adjoint() << std::endl;
+            Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb after update (internal_glmerWrkIter()) is: " << pp->delb().adjoint() << std::endl;
+
             if (verb) {
                 Rcpp::Rcout << "pdev=" << pdev << 
                     "; delu_min: " << pp->delu().minCoeff() <<
@@ -442,7 +446,21 @@ extern "C" {
         // Kyou: change it as false for all case!
         //pwrssUpdate(rp, pp, true, tol, maxit, verb); // should be a
                                                      // no-op
+
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->theta() before pwrssUpdate: " << pp->theta() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta0() before pwrssUpdate: " << pp->beta0().adjoint() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u0() before pwrssUpdate: " << pp->u0().adjoint() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta(1.) before pwrssUpdate: " << pp->beta(1.).adjoint() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u(1.) before pwrssUpdate: " << pp->u(1.).adjoint() << std::endl;
+
         pwrssUpdate(rp, pp, false, tol, maxit, verb);
+        
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->theta() after pwrssUpdate: " << pp->theta() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta0() after pwrssUpdate: " << pp->beta0().adjoint() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u0() after pwrssUpdate: " << pp->u0().adjoint() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta(1.) after pwrssUpdate: " << pp->beta(1.).adjoint() << std::endl;
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u(1.) after pwrssUpdate: " << pp->u(1.).adjoint() << std::endl;
+
         // Kyou: But it is not enough! fixed effects are still being optimized in the non-linear optimizer!
         // Kyou: Need to remove the fixed effects in the non-linear optimizer too!
 
@@ -471,6 +489,7 @@ extern "C" {
                          GQmat(i, 2)).exp() * GQmat(i, 1)/sqrt2pi;
             }
         }
+        // Kyou: restore settings for u only? how about beta?
         pp->setU0(Vec::Zero(q)); // restore settings from pwrssUpdate;
         rp->updateMu(pp->linPred(1.));
 
@@ -494,6 +513,7 @@ extern "C" {
                 ::Rprintf("   nstepFac(), fac=%6.4f, prss0-prss1=%10g\n",
                           fac, prss0 - prss1);
             if (prss1 < prss0) {
+                // Kyou: installPars() might be the function to set the beta and theta at each step, it might be able to integrate in pwrss
                 pp->installPars(fac);
                 return;
             }
