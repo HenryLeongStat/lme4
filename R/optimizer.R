@@ -1,6 +1,7 @@
 ## --> ../man/NelderMead.Rd
 Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
                         upper=rep.int(Inf, n), control=list()) {
+    #cat("Kyou: in optimizer.R, Nelder_Mead!!! par is: ", par, "\n")
     n <- length(par)
     if (is.null(xst <- control[["xst"]])) xst <- rep.int(0.02,n)
     if (is.null(xt <- control[["xt"]])) xt <- xst*5e-4
@@ -16,7 +17,18 @@ Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
                                     "0"=0, "1"=20,"2"=10,"3"=1)
     }
     cat("Kyou: in optimizer.R, Nelder_Mead!!! xst is: ", xst, "\n")
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! class(xst) is: ", class(xt), "\n")
+    # Kyou: interestingly, xst is the same as xt???
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! xt is: ", xst, "\n")
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! class(xt) is: ", class(xt), "\n")
+
     cat("Kyou: in optimizer.R, Nelder_Mead!!! n is: ", n, "\n")
+    # Kyou: not really sure where does this xst comes from, also the n...
+    # Kyou: quick fix: xst is a vector for now and betas are in par
+    # Kyou: just pick the first one out...
+    # Kyou: also for xt
+    xst <- xst[1]
+    xt <- xt[1]
 
     stopifnot(is.function(fn),
               length(formals(fn)) == 1L,

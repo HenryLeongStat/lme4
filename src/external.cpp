@@ -318,6 +318,8 @@ extern "C" {
         for (int i = 0; i < maxit; i++) {
             if (verb) {
                 Rcpp::Rcout << "*** pwrssUpdate step " << i << std::endl;
+                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu is: " << pp->delu().adjoint() << std::endl;
+                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb is: " << pp->delb().adjoint() << std::endl;
                 if (debug) {
                     Rcpp::Rcout << "\nmin delu at iteration " << i << ": " << pp->delu().minCoeff() << std::endl;
                     Rcpp::Rcout << "\nmax delu at iteration " << i << ": " << pp->delu().maxCoeff() << std::endl;
@@ -337,7 +339,12 @@ extern "C" {
                     "; delb_max: " << pp->delb().maxCoeff() <<
                     std::endl; // if (verb) 
             }
-            if (std::abs((oldpdev - pdev) / pdev) < tol) {cvgd = true; break;}
+            if (std::abs((oldpdev - pdev) / pdev) < tol) {
+                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! std::abs((oldpdev - pdev) / pdev) is: " << std::abs((oldpdev - pdev) / pdev) << std::endl;
+                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! tol is: " << tol << std::endl;
+                
+                cvgd = true; break;
+                }
 
             if (ISNAN(pdev) || (pdev > oldpdev)) { 
                 // PWRSS step led to _larger_ deviation, or nan; try step halving
