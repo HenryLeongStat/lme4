@@ -27,6 +27,10 @@ Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
     # Kyou: quick fix: xst is a vector for now and betas are in par
     # Kyou: just pick the first one out...
     # Kyou: also for xt
+    # Kyou: from ./man/Nelder_Mead.Rd, xst is: {numeric vector of initial step sizes to
+    #    establish the simplex - all elements must be non-zero}
+    #    (default: rep(0.02,length(par)))}
+    #    and xt is: {numeric vector of tolerances on the parameters (default: xst*5e-4)}
     xst <- xst[1]
     xt <- xt[1]
 
