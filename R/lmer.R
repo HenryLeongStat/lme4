@@ -324,8 +324,10 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
 	    # Kyou: use theta only, which follows nAGQ==0
             #function(pars) {
 	    function(theta) {
-		cat("Kyou: in lmer.R! Inside function for nAGQ>0 and not setting fixed-effects as offset")
+		cat("Kyou: in lmer.R! Inside function for nAGQ>0 and not setting fixed-effects as offset", "\n")
                 ## pp$setDelu(rep(0, length(pp$delu)))
+		# Kyou: What is resp?
+		cat("Kyou: class(resp) is: ", class(resp), "\n")
                 resp$setOffset(baseOffset)
                 resp$updateMu(lp0)
                 #pp$setTheta(as.double(pars[dpars])) # theta is first part of pars
@@ -401,6 +403,7 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
 ##     stop("step factor reduced below ",signif(2^(-maxSteps),2)," without reducing pwrss")
 ## }
 
+# Kyou: only used when using the non compiled code (compDev=FALSE)!
 RglmerWrkIter <- function(pp, resp, uOnly=FALSE) {
     pp$updateXwts(resp$sqrtWrkWt())
     pp$updateDecomp()

@@ -271,14 +271,18 @@ extern "C" {
                        pp->Xwts().minCoeff() << 
                        " sqrtWrkWt: min: " <<
                        rp->sqrtWrkWt().minCoeff() << std::endl;
+        
         pp->updateXwts(rp->sqrtWrkWt());
         if (debug) Rcpp::Rcout << "(igWI) Xwts: min: " << 
                        pp->Xwts().minCoeff() << 
                        " max: " << pp->Xwts().maxCoeff() << std::endl;
+        
         pp->updateDecomp();
         pp->updateRes(rp->wtWrkResp());
+
         if (uOnly) pp->solveU();
         else pp->solve();
+        
         if (debug) {
             Rcpp::Rcout << "(igWI)" <<
                 " delu_min: " << pp->delu().minCoeff() <<
@@ -329,6 +333,7 @@ extern "C" {
                     Rcpp::Rcout << "before update:" << "pdev = " << pdev << std::endl; // if (verb) 
                 }
             }
+            // Kyou: really these two lines belows are all this funcion, pwrssUpdate(), does...
             Vec   olddelu(pp->delu()), olddelb(pp->delb());
             pdev = internal_glmerWrkIter(pp, rp, uOnly);
 

@@ -42,6 +42,7 @@ Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
               all(xst != 0),
               length(xt <- as.numeric(xt)) == n)
     ## "NelderMead" reference class and constructor: --> ./AllClass.R :
+    # Kyou: NelderMead$new() just create another NelderMead() but can with different argument
     nM <- NelderMead$new(lower=lower, upper=upper, x0=par, xst=xst, xt=xt)
     cc <- do.call(function(iprint = 0L, maxfun = 10000L, FtolAbs = 1e-5,
                            FtolRel = 1e-15, XtolRel = 1e-7,
