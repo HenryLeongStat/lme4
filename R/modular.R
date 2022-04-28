@@ -758,18 +758,22 @@ mkGlmerDevfun <- function(fr, X, reTrms, family, nAGQ = 1L, verbose = 0L,
         mkRespMod(fr, family=family)
     nAGQinit <- if(control$nAGQ0initStep) 0L else 1L
     ## allow trivial y
+    cat("Kyou: in modular.R, mkGlmerDevfun(), length(y <- rho$resp$y) is: ", length(y <- rho$resp$y), "\n")
     if (length(y <- rho$resp$y) > 0) {
         checkResponse(y, control$checkControl)
         rho$verbose <- as.integer(verbose)
 
         ## initialize (from mustart)
 	# Kyou: Why do a Laplace step here???
+	# Kyou: seems like it is an initialized step, but it should be easy to implement for AGQ vs Laplace
+	# Kyou: not sure how big of a difference this causes
         .Call(glmerLaplace, rho$pp$ptr(), rho$resp$ptr(), nAGQinit,
               control$tolPwrss, maxit, verbose)
         rho$lp0         <- rho$pp$linPred(1) # each pwrss opt begins at this eta
         rho$pwrssUpdate <- glmerPwrssUpdate
     }
     rho$lower <- reTrms$lower     # not needed in rho?
+    # Kyou: the second argument, nAGQinit, is treated as "nAGQ" in `mkdevfun()- lmer.R`...
     mkdevfun(rho, nAGQinit, maxit=maxit, verbose=verbose, control=control)
     ## this should pass the rho environment implicitly
 }
@@ -780,6 +784,7 @@ mkGlmerDevfun <- function(fr, X, reTrms, family, nAGQ = 1L, verbose = 0L,
 ##' @param nAGQ number of Gauss-Hermite quadrature points
 ##' @param stage optimization stage (1: nAGQ=0, optimize over theta only; 2: nAGQ possibly >0, optimize over theta and beta)
 ##' @export
+# Kyou: this function should be the one for theta!!!
 optimizeGlmer <- function(devfun,
                           optimizer = if(stage == 1) "bobyqa" else "Nelder_Mead",
                           restart_edge=FALSE,
@@ -809,6 +814,7 @@ optimizeGlmer <- function(devfun,
                    control=control, adj=adj, verbose=verbose,
                    ...)
     if (stage == 1) {
+	# Kyou: rho$control is NULL (?); attr(opt,"control") is $maxfun (3)
         rho$control <- attr(opt,"control")
         rho$nAGQ <- nAGQ
     } else {  ## stage == 2
@@ -817,8 +823,10 @@ optimizeGlmer <- function(devfun,
 	# Kyou: See the difference between rho$control vs opt:control
 	cat("Kyou: rho$control is:\n")
 	print(rho$control)
-	cat("Kyou: attropt,control is:\n")
+	cat("Kyou: attr(opt,\'control\') is:\n")
 	print(attr(opt,"control"))
+	cat("Kyou: rho$baseOffset is:\n")
+	print(rho$baseOffset) # Kyou: baseOffset is all 0
         rho$resp$setOffset(rho$baseOffset)
     }
     if (restart_edge) ## FIXME: implement this ...

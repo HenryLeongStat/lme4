@@ -285,3 +285,6 @@ S3method(getGroups,lmList4)
 S3method(rePCA,merMod)
 S3method(summary,prcomplist)
 export(rePCA)
+
+# Kyou: export for `pwrssUpdate()` in `mkdevfun()- lme4.R`
+#export(pwrssUpdate)

@@ -271,7 +271,10 @@ extern "C" {
                        pp->Xwts().minCoeff() << 
                        " sqrtWrkWt: min: " <<
                        rp->sqrtWrkWt().minCoeff() << std::endl;
-        
+
+        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! pp->Xwts() is: " << pp->Xwts() << std::endl; 
+        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->sqrtXwt() is: " << rp->sqrtXwt() << std::endl; 
+         
         pp->updateXwts(rp->sqrtWrkWt());
         if (debug) Rcpp::Rcout << "(igWI) Xwts: min: " << 
                        pp->Xwts().minCoeff() << 
@@ -282,7 +285,7 @@ extern "C" {
 
         if (uOnly) pp->solveU();
         else pp->solve();
-        
+
         if (debug) {
             Rcpp::Rcout << "(igWI)" <<
                 " delu_min: " << pp->delu().minCoeff() <<
@@ -336,6 +339,8 @@ extern "C" {
             // Kyou: really these two lines belows are all this funcion, pwrssUpdate(), does...
             Vec   olddelu(pp->delu()), olddelb(pp->delb());
             pdev = internal_glmerWrkIter(pp, rp, uOnly);
+
+            Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pdev is: " << pdev << std::endl;
 
             Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu after update (internal_glmerWrkIter()) is: " << pp->delu().adjoint() << std::endl;
             Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb after update (internal_glmerWrkIter()) is: " << pp->delb().adjoint() << std::endl;

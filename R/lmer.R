@@ -178,7 +178,7 @@ glmer <- function(formula, data=NULL
                              restart_edge=control$restart_edge,
                              boundary.tol=control$boundary.tol,
                              control = control$optCtrl,
-                             start=start,
+                             start=start, # Kyou: start is fixed at the `optimizeGlmer()- modular.R` side to include theta only.
                              nAGQ=nAGQ,
                              verbose = verbose,
                              stage=2,
@@ -316,6 +316,7 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
                 pp$setTheta(theta)
                 p <- pwrssUpdate(pp, resp, tol=tolPwrss, GQmat=GHrule(0L),
                                  compDev=compDev, maxit=maxit, verbose=verbose)
+		cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
                 resp$updateWts()
                 p
             }
@@ -341,6 +342,10 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
                 resp$setOffset(offset)
                 p <- pwrssUpdate(pp, resp, tol=tolPwrss, GQmat=GQmat,
                                  compDev=compDev, grpFac=fac, maxit=maxit, verbose=verbose)
+		cat("Kyou: in mkdevfun()- lmer.R!, getAnywhere(\'pwrssUpdate\') is bolow:", "\n")
+		var_get_func_code <- getAnywhere('pwrssUpdate')
+		print(var_get_func_code)
+		cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
                 resp$updateWts()
                 p
             }
@@ -1438,6 +1443,7 @@ refit.merMod <- function(object,
     devlist <-
         if (isGLMM(object)) {
             baseOffset <- forceCopy(object@resp$offset)
+	    cat("Kyou: in refit.merMod()- lmer.R!! It means refit.merMod() is used!")
 
             list(tolPwrss= dc$cmp [["tolPwrss"]],
                  compDev = dc$dims[["compDev"]],

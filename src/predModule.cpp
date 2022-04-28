@@ -208,6 +208,8 @@ namespace lme4 {
   return d_CcNumer;
     }
 
+    // Kyou: Xwt is "X weights" from ./src/respModule.h 
+    // Kyou: is it the same as Xwts?
     void merPredD::updateXwts(const ArrayXd& sqrtXwt) {
         if (d_Xwts.size() != sqrtXwt.size())
             throw invalid_argument("updateXwts: dimension mismatch");
