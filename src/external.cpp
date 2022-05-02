@@ -274,7 +274,10 @@ extern "C" {
 
         Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! pp->Xwts() is: " << pp->Xwts() << std::endl; 
         Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->sqrtXwt() is: " << rp->sqrtXwt() << std::endl; 
-         
+        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->mu() is: " << rp->mu() << std::endl; 
+        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->weights() is: " << rp->weights() << std::endl; 
+
+
         pp->updateXwts(rp->sqrtWrkWt());
         if (debug) Rcpp::Rcout << "(igWI) Xwts: min: " << 
                        pp->Xwts().minCoeff() << 
@@ -298,6 +301,7 @@ extern "C" {
 	// FIXME: warn/error/clamp/penalize here if value is out of bounds
         if (debug) Rcpp::Rcout << "(igWI) mu: min: " << rp->mu().minCoeff() << 
                        " max: " << rp->mu().maxCoeff() << std::endl;
+        // Kyou: so called pdev
         return rp->resDev() + pp->sqrL(1.);
     }
 
@@ -400,6 +404,9 @@ extern "C" {
         BEGIN_RCPP;
         XPtr<glmResp>  rp(rp_);
         XPtr<merPredD> pp(pp_);
+        // Kyou: why this function is run even I set init=FALSE and nAGQ>1!?!?!!?
+        // Kyou: it is because at the very first run, the implementation still uses this for the very first step (even init=FALSE)!
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerLaplace()! delb 1:  " << pp->delb().adjoint() << std::endl;
 
         if ( ::Rf_asInteger(verbose_) >100) {
             Rcpp::Rcout << "\nglmerLaplace resDev:  " << rp->resDev() << std::endl;
@@ -408,7 +415,7 @@ extern "C" {
         }
         // Kyou: the third argument is uOnly. Here, it means whenever nAGQ!=0, uOnly=TRUE
         // Kyou: change it as false for all case!
-        // Here is for Laplace... Should change it for AGQ!!
+        // Kyou: Here is for Laplace... Should change it for AGQ!!
         // pwrssUpdate(rp, pp, ::Rf_asInteger(nAGQ_), ::Rf_asReal(tol_), 
         pwrssUpdate(rp, pp, false, ::Rf_asReal(tol_),  
                     ::Rf_asInteger(maxit_), ::Rf_asInteger(verbose_));
@@ -462,6 +469,12 @@ extern "C" {
         Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u0() before pwrssUpdate: " << pp->u0().adjoint() << std::endl;
         Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta(1.) before pwrssUpdate: " << pp->beta(1.).adjoint() << std::endl;
         Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u(1.) before pwrssUpdate: " << pp->u(1.).adjoint() << std::endl;
+
+        // Kyou: try to return rp->mu()
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! rp->mu() before pwrssUpdate: " << rp->mu() << std::endl; 
+        //Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! rp->muEta() before pwrssUpdate: " << rp->muEta().adjoint() << std::endl; 
+
+        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->Xwts() before pwrssUpdate: " << pp->Xwts() << std::endl; 
 
         pwrssUpdate(rp, pp, false, tol, maxit, verb);
         

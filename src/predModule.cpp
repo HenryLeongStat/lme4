@@ -81,11 +81,12 @@ namespace lme4 {
             }
         }
     }
-
+    // Kyou: b is random effect parameter
     VectorXd merPredD::b(const double& f) const {return d_Lambdat.adjoint() * u(f);}
 
     VectorXd merPredD::beta(const double& f) const {return d_beta0 + f * d_delb;}
 
+    // Kyou: eta
     VectorXd merPredD::linPred(const double& f) const {
         return d_X * beta(f) + d_Zt.adjoint() * b(f);
     }
@@ -208,8 +209,10 @@ namespace lme4 {
   return d_CcNumer;
     }
 
-    // Kyou: Xwt is "X weights" from ./src/respModule.h 
-    // Kyou: is it the same as Xwts?
+    // Kyou: d_sqrtXwt is "square root of X weights" from ./src/respModule.h 
+    // Kyou: For glmResp and nlsResp they incorporate the gradient of the eta to mu mapping
+    // Kyou: Is it the same as Xwt?
+    // Kyou: no, it is not based on the print of pp->Xwts() and rp->sqrtXwt()
     void merPredD::updateXwts(const ArrayXd& sqrtXwt) {
         if (d_Xwts.size() != sqrtXwt.size())
             throw invalid_argument("updateXwts: dimension mismatch");
