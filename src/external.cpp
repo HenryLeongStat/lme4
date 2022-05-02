@@ -518,10 +518,13 @@ extern "C" {
 
 	// Kyou: To avoid overflow/underflow!!!
 
+    //    double log_mult_prod=0;
+    //   for (int i=0; i<q; i++) {
+	//     log_mult_prod += std::log(mult(i));
+	//  }
         double log_mult_prod=0;
-        for (int i=0; i<q; i++) {
-	        log_mult_prod += std::log(mult(i));
-	    }
+        log_mult_prod = mult.array().log().sum();
+        
 
         return ::Rf_ScalarReal(devc0.sum() + pp->ldL2() - 2 * log_mult_prod);
         //return ::Rf_ScalarReal(devc0.sum() + pp->ldL2() - 2 * std::log(mult.prod()));
