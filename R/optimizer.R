@@ -1,8 +1,11 @@
 ## --> ../man/NelderMead.Rd
 Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
                         upper=rep.int(Inf, n), control=list()) {
-    #cat("Kyou: in optimizer.R, Nelder_Mead!!! par is: ", par, "\n")
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! par is: ", par, "\n")
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! control[[xst]] is: ", control[["xst"]], "\n")
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! control[[xt]] is: ", control[["xt"]], "\n")
     n <- length(par)
+    cat("Kyou: in optimizer.R, Nelder_Mead!!! n is: ", n, "\n")
     if (is.null(xst <- control[["xst"]])) xst <- rep.int(0.02,n)
     if (is.null(xt <- control[["xt"]])) xt <- xst*5e-4
 
@@ -22,7 +25,7 @@ Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
     cat("Kyou: in optimizer.R, Nelder_Mead!!! xt is: ", xst, "\n")
     cat("Kyou: in optimizer.R, Nelder_Mead!!! class(xt) is: ", class(xt), "\n")
 
-    cat("Kyou: in optimizer.R, Nelder_Mead!!! n is: ", n, "\n")
+    #cat("Kyou: in optimizer.R, Nelder_Mead!!! n is: ", n, "\n")
     # Kyou: not really sure where does this xst comes from, also the n...
     # Kyou: quick fix: xst is a vector for now and betas are in par
     # Kyou: just pick the first one out...
@@ -31,8 +34,9 @@ Nelder_Mead <- function(fn, par, lower=rep.int(-Inf, n),
     #    establish the simplex - all elements must be non-zero}
     #    (default: rep(0.02,length(par)))}
     #    and xt is: {numeric vector of tolerances on the parameters (default: xst*5e-4)}
-    xst <- xst[1]
-    xt <- xt[1]
+    #xst <- xst[1]
+    #xt <- xt[1]
+    # Kyou: found it! It is from lmer.R- optwrap()- inside if(adj)0 betaSD shouldn't be added
 
     stopifnot(is.function(fn),
               length(formals(fn)) == 1L,

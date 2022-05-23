@@ -1459,6 +1459,7 @@ refit.merMod <- function(object,
             list(pp=pp, resp=rr, u0=pp$u0, verbose=verbose, dpars=seq_len(nth))
     ff <- mkdevfun(list2env(devlist), nAGQ=nAGQ, maxit=maxit, verbose=verbose)
     ## rho <- environment(ff) == list2env(devlist)
+    #cat("Kyou: in lmer.R()!!! nth is: ", nth, "\n")
     xst       <- rep.int(0.1, nth)
     x0        <- pp$theta
     lower     <- object@lower
@@ -2644,9 +2645,15 @@ optwrap <- function(optimizer, fn, par, lower = -Inf, upper = Inf,
                    if (is.null(control$xst))  {
                        thetaStep <- 0.1
                        nTheta <- length(environment(fn)$pp$theta)
+                       # Kyou: MatrixXd merPredD::unsc() const // unscaled var-cov mat of FE
                        betaSD <- sqrt(diag(environment(fn)$pp$unsc()))
-                       control$xst <- 0.2* c(rep.int(thetaStep, nTheta),
-                                             pmin(betaSD, 10))
+                       cat("Kyou: in lmer.R- optwrap()!!! nTheta is: ", nTheta, "\n")
+                       cat("Kyou: in lmer.R- optwrap()!!! betaSD is: ", betaSD, "\n")
+                       # Kyou: This is the one!!! betaSD would be addad to control$xst, with no interface...
+                       #control$xst <- 0.2* c(rep.int(thetaStep, nTheta),
+                       #                       pmin(betaSD, 10))
+                       control$xst <- 0.2* c(rep.int(thetaStep, nTheta))
+                       cat("Kyou: in lmer.R- optwrap()!!! control$xst is: ", control$xst, "\n")
                    }
                    if (is.null(control$xt)) control$xt <- control$xst*5e-4
                })
