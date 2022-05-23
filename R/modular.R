@@ -805,9 +805,9 @@ optimizeGlmer <- function(devfun,
     } else { ## stage == 2
 	# Kyou: getStart should only be theta, following the stage 1
         #start <- getStart(start, rho$pp, "all")
-	start <- getStart(start, rho$pp, "theta")
-	# Kyou: What is adj really??!?
-	# Kyou: in lmer.R, lines 2600+, if adj is TRUE, then the control variables such as rhobeg, thetaStep are not set (can try and see the difference)
+	      start <- getStart(start, rho$pp, "theta")
+    	  # Kyou: What is adj really??!?
+      	# Kyou: in lmer.R, lines 2600+, if adj is TRUE, then the control variables such as rhobeg, thetaStep are not set (can try and see the difference)
         adj <- TRUE
     }
     opt <- optwrap(optimizer, devfun, start, rho$lower,
