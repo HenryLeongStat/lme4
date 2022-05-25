@@ -316,7 +316,7 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
                 pp$setTheta(theta)
                 p <- pwrssUpdate(pp, resp, tol=tolPwrss, GQmat=GHrule(0L),
                                  compDev=compDev, maxit=maxit, verbose=verbose)
-		cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
+		#cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
                 resp$updateWts()
                 p
             }
@@ -325,10 +325,10 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
 	    # Kyou: use theta only, which follows nAGQ==0
             #function(pars) {
 	    function(theta) {
-		cat("Kyou: in lmer.R! Inside function for nAGQ>0 and not setting fixed-effects as offset", "\n")
+		#cat("Kyou: in lmer.R! Inside function for nAGQ>0 and not setting fixed-effects as offset", "\n")
                 ## pp$setDelu(rep(0, length(pp$delu)))
 		# Kyou: What is resp?
-		cat("Kyou: class(resp) is: ", class(resp), "\n")
+		#cat("Kyou: class(resp) is: ", class(resp), "\n")
                 resp$setOffset(baseOffset)
                 resp$updateMu(lp0)
                 #pp$setTheta(as.double(pars[dpars])) # theta is first part of pars
@@ -342,10 +342,10 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
                 resp$setOffset(offset)
                 p <- pwrssUpdate(pp, resp, tol=tolPwrss, GQmat=GQmat,
                                  compDev=compDev, grpFac=fac, maxit=maxit, verbose=verbose)
-		cat("Kyou: in mkdevfun()- lmer.R!, getAnywhere(\'pwrssUpdate\') is bolow:", "\n")
+		#cat("Kyou: in mkdevfun()- lmer.R!, getAnywhere(\'pwrssUpdate\') is bolow:", "\n")
 		var_get_func_code <- getAnywhere('pwrssUpdate')
 		print(var_get_func_code)
-		cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
+		#cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
                 resp$updateWts()
                 p
             }
@@ -1443,7 +1443,7 @@ refit.merMod <- function(object,
     devlist <-
         if (isGLMM(object)) {
             baseOffset <- forceCopy(object@resp$offset)
-	    cat("Kyou: in refit.merMod()- lmer.R!! It means refit.merMod() is used!")
+	    #cat("Kyou: in refit.merMod()- lmer.R!! It means refit.merMod() is used!")
 
             list(tolPwrss= dc$cmp [["tolPwrss"]],
                  compDev = dc$dims[["compDev"]],
@@ -2647,13 +2647,13 @@ optwrap <- function(optimizer, fn, par, lower = -Inf, upper = Inf,
                        nTheta <- length(environment(fn)$pp$theta)
                        # Kyou: MatrixXd merPredD::unsc() const // unscaled var-cov mat of FE
                        betaSD <- sqrt(diag(environment(fn)$pp$unsc()))
-                       cat("Kyou: in lmer.R- optwrap()!!! nTheta is: ", nTheta, "\n")
-                       cat("Kyou: in lmer.R- optwrap()!!! betaSD is: ", betaSD, "\n")
+                       #cat("Kyou: in lmer.R- optwrap()!!! nTheta is: ", nTheta, "\n")
+                       #cat("Kyou: in lmer.R- optwrap()!!! betaSD is: ", betaSD, "\n")
                        # Kyou: This is the one!!! betaSD would be addad to control$xst, with no interface...
                        #control$xst <- 0.2* c(rep.int(thetaStep, nTheta),
                        #                       pmin(betaSD, 10))
                        control$xst <- 0.2* c(rep.int(thetaStep, nTheta))
-                       cat("Kyou: in lmer.R- optwrap()!!! control$xst is: ", control$xst, "\n")
+                       #cat("Kyou: in lmer.R- optwrap()!!! control$xst is: ", control$xst, "\n")
                    }
                    if (is.null(control$xt)) control$xt <- control$xst*5e-4
                })

@@ -272,10 +272,10 @@ extern "C" {
                        " sqrtWrkWt: min: " <<
                        rp->sqrtWrkWt().minCoeff() << std::endl;
 
-        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! pp->Xwts() is: " << pp->Xwts() << std::endl; 
-        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->sqrtXwt() is: " << rp->sqrtXwt() << std::endl; 
-        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->mu() is: " << rp->mu() << std::endl; 
-        Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->weights() is: " << rp->weights() << std::endl; 
+        // Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! pp->Xwts() is: " << pp->Xwts() << std::endl; 
+        // Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->sqrtXwt() is: " << rp->sqrtXwt() << std::endl; 
+        // Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->mu() is: " << rp->mu() << std::endl; 
+        // Rcpp::Rcout << "\nKyou: in internal_glmerWrkIter() from external.cpp! rp->weights() is: " << rp->weights() << std::endl; 
 
 
         pp->updateXwts(rp->sqrtWrkWt());
@@ -329,8 +329,8 @@ extern "C" {
         for (int i = 0; i < maxit; i++) {
             if (verb) {
                 Rcpp::Rcout << "*** pwrssUpdate step " << i << std::endl;
-                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu before update is: " << pp->delu().adjoint() << std::endl;
-                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb before update is: " << pp->delb().adjoint() << std::endl;
+                // Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu before update is: " << pp->delu().adjoint() << std::endl;
+                // Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb before update is: " << pp->delb().adjoint() << std::endl;
                 if (debug) {
                     Rcpp::Rcout << "\nmin delu at iteration " << i << ": " << pp->delu().minCoeff() << std::endl;
                     Rcpp::Rcout << "\nmax delu at iteration " << i << ": " << pp->delu().maxCoeff() << std::endl;
@@ -344,10 +344,10 @@ extern "C" {
             Vec   olddelu(pp->delu()), olddelb(pp->delb());
             pdev = internal_glmerWrkIter(pp, rp, uOnly);
 
-            Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pdev is: " << pdev << std::endl;
+            // Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pdev is: " << pdev << std::endl;
 
-            Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu after update (internal_glmerWrkIter()) is: " << pp->delu().adjoint() << std::endl;
-            Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb after update (internal_glmerWrkIter()) is: " << pp->delb().adjoint() << std::endl;
+            // Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delu after update (internal_glmerWrkIter()) is: " << pp->delu().adjoint() << std::endl;
+            // Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! pp->delb after update (internal_glmerWrkIter()) is: " << pp->delb().adjoint() << std::endl;
 
             if (verb) {
                 Rcpp::Rcout << "pdev=" << pdev << 
@@ -358,8 +358,8 @@ extern "C" {
                     std::endl; // if (verb) 
             }
             if (std::abs((oldpdev - pdev) / pdev) < tol) {
-                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! std::abs((oldpdev - pdev) / pdev) is: " << std::abs((oldpdev - pdev) / pdev) << std::endl;
-                Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! tol is: " << tol << std::endl;
+                // Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! std::abs((oldpdev - pdev) / pdev) is: " << std::abs((oldpdev - pdev) / pdev) << std::endl;
+                // Rcpp::Rcout << "\nKyou: in external.cpp!! pwrssUpdate()!!! tol is: " << tol << std::endl;
                 
                 cvgd = true; break;
                 }
@@ -406,12 +406,12 @@ extern "C" {
         XPtr<merPredD> pp(pp_);
         // Kyou: why this function is run even I set init=FALSE and nAGQ>1!?!?!!?
         // Kyou: it is because at the very first run, the implementation still uses this for the very first step (even init=FALSE)!
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerLaplace()! delb 1:  " << pp->delb().adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerLaplace()! delb 1:  " << pp->delb().adjoint() << std::endl;
 
         if ( ::Rf_asInteger(verbose_) >100) {
             Rcpp::Rcout << "\nglmerLaplace resDev:  " << rp->resDev() << std::endl;
             // Kyou: why this function is run even I set init=FALSE and nAGQ>1!?!?!!?
-            Rcpp::Rcout << "\nKyou: in external.cpp! glmerLaplace()! delb 1:  " << pp->delb().adjoint() << std::endl;
+            // Rcpp::Rcout << "\nKyou: in external.cpp! glmerLaplace()! delb 1:  " << pp->delb().adjoint() << std::endl;
         }
         // Kyou: the third argument is uOnly. Here, it means whenever nAGQ!=0, uOnly=TRUE
         // Kyou: change it as false for all case!
@@ -464,25 +464,25 @@ extern "C" {
         //pwrssUpdate(rp, pp, true, tol, maxit, verb); // should be a
                                                      // no-op
 
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->theta() before pwrssUpdate: " << pp->theta() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta0() before pwrssUpdate: " << pp->beta0().adjoint() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u0() before pwrssUpdate: " << pp->u0().adjoint() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta(1.) before pwrssUpdate: " << pp->beta(1.).adjoint() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u(1.) before pwrssUpdate: " << pp->u(1.).adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->theta() before pwrssUpdate: " << pp->theta() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta0() before pwrssUpdate: " << pp->beta0().adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u0() before pwrssUpdate: " << pp->u0().adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta(1.) before pwrssUpdate: " << pp->beta(1.).adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u(1.) before pwrssUpdate: " << pp->u(1.).adjoint() << std::endl;
 
         // Kyou: try to return rp->mu()
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! rp->mu() before pwrssUpdate: " << rp->mu() << std::endl; 
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! rp->mu() before pwrssUpdate: " << rp->mu() << std::endl; 
         //Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! rp->muEta() before pwrssUpdate: " << rp->muEta().adjoint() << std::endl; 
 
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->Xwts() before pwrssUpdate: " << pp->Xwts() << std::endl; 
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->Xwts() before pwrssUpdate: " << pp->Xwts() << std::endl; 
 
         pwrssUpdate(rp, pp, false, tol, maxit, verb);
         
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->theta() after pwrssUpdate: " << pp->theta() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta0() after pwrssUpdate: " << pp->beta0().adjoint() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u0() after pwrssUpdate: " << pp->u0().adjoint() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta(1.) after pwrssUpdate: " << pp->beta(1.).adjoint() << std::endl;
-        Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u(1.) after pwrssUpdate: " << pp->u(1.).adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->theta() after pwrssUpdate: " << pp->theta() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta0() after pwrssUpdate: " << pp->beta0().adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u0() after pwrssUpdate: " << pp->u0().adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->beta(1.) after pwrssUpdate: " << pp->beta(1.).adjoint() << std::endl;
+        // Rcpp::Rcout << "\nKyou: in external.cpp! glmerAGQ()!! pp->u(1.) after pwrssUpdate: " << pp->u(1.).adjoint() << std::endl;
 
         // Kyou: But it is not enough! fixed effects are still being optimized in the non-linear optimizer!
         // Kyou: Need to remove the fixed effects in the non-linear optimizer too!

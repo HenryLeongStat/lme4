@@ -758,7 +758,7 @@ mkGlmerDevfun <- function(fr, X, reTrms, family, nAGQ = 1L, verbose = 0L,
         mkRespMod(fr, family=family)
     nAGQinit <- if(control$nAGQ0initStep) 0L else 1L
     ## allow trivial y
-    cat("Kyou: in modular.R, mkGlmerDevfun(), length(y <- rho$resp$y) is: ", length(y <- rho$resp$y), "\n")
+    #cat("Kyou: in modular.R, mkGlmerDevfun(), length(y <- rho$resp$y) is: ", length(y <- rho$resp$y), "\n")
     if (length(y <- rho$resp$y) > 0) {
         checkResponse(y, control$checkControl)
         rho$verbose <- as.integer(verbose)
@@ -795,7 +795,7 @@ optimizeGlmer <- function(devfun,
                           stage = 1,
                           start = NULL,
                           ...) {
-    cat("Kyou: in optimizeGlmer!")
+    #cat("Kyou: in optimizeGlmer!")
     ## FIXME: do we need nAGQ here?? or can we clean up?
     verbose <- as.integer(verbose)
     rho <- environment(devfun)
@@ -821,12 +821,12 @@ optimizeGlmer <- function(devfun,
 	# Kyou: Originally, the betas are set as offset in the PIRLS step
 	# Kyou: 
 	# Kyou: See the difference between rho$control vs opt:control
-	cat("Kyou: rho$control is:\n")
-	print(rho$control)
-	cat("Kyou: attr(opt,\'control\') is:\n")
-	print(attr(opt,"control"))
-	cat("Kyou: rho$baseOffset is:\n")
-	print(rho$baseOffset) # Kyou: baseOffset is all 0
+	#cat("Kyou: rho$control is:\n")
+	#print(rho$control)
+	#cat("Kyou: attr(opt,\'control\') is:\n")
+	#print(attr(opt,"control"))
+	#cat("Kyou: rho$baseOffset is:\n")
+	#print(rho$baseOffset) # Kyou: baseOffset is all 0
         rho$resp$setOffset(rho$baseOffset)
     }
     if (restart_edge) ## FIXME: implement this ...
