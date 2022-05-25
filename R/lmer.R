@@ -343,8 +343,8 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
                 p <- pwrssUpdate(pp, resp, tol=tolPwrss, GQmat=GQmat,
                                  compDev=compDev, grpFac=fac, maxit=maxit, verbose=verbose)
 		#cat("Kyou: in mkdevfun()- lmer.R!, getAnywhere(\'pwrssUpdate\') is bolow:", "\n")
-		var_get_func_code <- getAnywhere('pwrssUpdate')
-		print(var_get_func_code)
+		#var_get_func_code <- getAnywhere('pwrssUpdate')
+		#print(var_get_func_code)
 		#cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
                 resp$updateWts()
                 p
