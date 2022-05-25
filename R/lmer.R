@@ -323,29 +323,29 @@ mkdevfun <- function(rho, nAGQ=1L, maxit = if(extends(rho.cld, "nlsResp")) 300L 
         else  ## nAGQ > 0
 	    # Kyou: for nAGQ>0, pars are all fixed-effects + theta
 	    # Kyou: use theta only, which follows nAGQ==0
-            #function(pars) {
-	    function(theta) {
-		#cat("Kyou: in lmer.R! Inside function for nAGQ>0 and not setting fixed-effects as offset", "\n")
+            function(pars) {
+	          #function(theta) {
+        		#cat("Kyou: in lmer.R! Inside function for nAGQ>0 and not setting fixed-effects as offset", "\n")
                 ## pp$setDelu(rep(0, length(pp$delu)))
-		# Kyou: What is resp?
-		#cat("Kyou: class(resp) is: ", class(resp), "\n")
+            		# Kyou: What is resp?
+            		#cat("Kyou: class(resp) is: ", class(resp), "\n")
                 resp$setOffset(baseOffset)
                 resp$updateMu(lp0)
-                #pp$setTheta(as.double(pars[dpars])) # theta is first part of pars
-		# Kyou: follows nAGQ==0
-		pp$setTheta(theta)
-		# Kyou: spars is useless when using theta only
-                #spars <- as.numeric(pars[-dpars])
-		# Kyou: Don't put fixed-effects as offset!!!!
+                pp$setTheta(as.double(pars[dpars])) # theta is first part of pars
+            		# Kyou: follows nAGQ==0
+            		#pp$setTheta(theta)
+            		# Kyou: spars is useless when using theta only
+                spars <- as.numeric(pars[-dpars])
+            		# Kyou: Don't put fixed-effects as offset!!!!
                 #offset <- if (length(spars)==0) baseOffset else baseOffset + pp$X %*% spars
-		offset <- baseOffset
-                resp$setOffset(offset)
+		            #offset <- baseOffset
+                #resp$setOffset(offset)
                 p <- pwrssUpdate(pp, resp, tol=tolPwrss, GQmat=GQmat,
                                  compDev=compDev, grpFac=fac, maxit=maxit, verbose=verbose)
-		#cat("Kyou: in mkdevfun()- lmer.R!, getAnywhere(\'pwrssUpdate\') is bolow:", "\n")
-		#var_get_func_code <- getAnywhere('pwrssUpdate')
-		#print(var_get_func_code)
-		#cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
+            		#cat("Kyou: in mkdevfun()- lmer.R!, getAnywhere(\'pwrssUpdate\') is bolow:", "\n")
+            		#var_get_func_code <- getAnywhere('pwrssUpdate')
+            		#print(var_get_func_code)
+            		#cat("Kyou: in mkdevfun()- lmer.R!, pwrssUpdate() is a void function in external.cpp. So p <- pwrssUpdate(...) here is: ", p, "\n")
                 resp$updateWts()
                 p
             }
@@ -2650,9 +2650,9 @@ optwrap <- function(optimizer, fn, par, lower = -Inf, upper = Inf,
                        #cat("Kyou: in lmer.R- optwrap()!!! nTheta is: ", nTheta, "\n")
                        #cat("Kyou: in lmer.R- optwrap()!!! betaSD is: ", betaSD, "\n")
                        # Kyou: This is the one!!! betaSD would be addad to control$xst, with no interface...
-                       #control$xst <- 0.2* c(rep.int(thetaStep, nTheta),
-                       #                       pmin(betaSD, 10))
-                       control$xst <- 0.2* c(rep.int(thetaStep, nTheta))
+                       control$xst <- 0.2* c(rep.int(thetaStep, nTheta),
+                                              pmin(betaSD, 10))
+                       #control$xst <- 0.2* c(rep.int(thetaStep, nTheta))
                        #cat("Kyou: in lmer.R- optwrap()!!! control$xst is: ", control$xst, "\n")
                    }
                    if (is.null(control$xt)) control$xt <- control$xst*5e-4
