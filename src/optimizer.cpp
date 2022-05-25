@@ -100,7 +100,10 @@ namespace optimizer {
  */
     nm_status Nelder_Mead::newf(const Scalar& f) {
         d_stop.incrEvals();
+        //Rcpp::Rcout << "Kyou f = " << f << " at x = " << xeval() << std::endl;
+
         if (d_verb > 0 && (d_stop.ev() % d_verb) == 0)
+            Rcpp::Rcout << "(NM) " << d_stop.ev() << ": " << "f = " << value() << " at " << d_x.adjoint() << std::endl;
             //Rcpp::Rcout << "Kyou: in optimizer.cpp!! in Nelder_Mead::newf! (NM) " << d_stop.ev() << ": " << "f = " << value() << " at x= " << d_x.adjoint() << std::endl;
         if (d_stop.forced()) {
             if (d_verb==1) {
@@ -126,6 +129,9 @@ namespace optimizer {
             return nm_evals;
         }
         if (init_pos <= d_n) {
+            //Rcpp::Rcout << "Kyou: (NM) init_pos <= d_n: " << init_pos << " <= " << d_n << std::endl;
+            //Rcpp::Rcout << "Kyou f = " << fv << " at x = " << xeval() << std::endl;
+            //Rcpp::Rcout << "Kyou f = " << f << " at x = " << xeval() << std::endl;
             if (d_verb==1) {
                 Rcpp::Rcout << "(NM) init_pos <= d_n" << std::endl;
             }
